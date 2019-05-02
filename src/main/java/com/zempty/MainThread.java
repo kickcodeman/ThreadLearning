@@ -1,5 +1,4 @@
 package com.zempty;
-
 /**
  * @author zempty
  * @create 2019-05-02 10:04 AM
@@ -12,8 +11,9 @@ public class MainThread {
 
         synchronized (task) {
             try {
-                Thread t1 = new Thread(task);
-                Thread t2 = new Thread(task);
+                Thread t1 = new Thread(task,"1");
+                Thread t2 = new Thread(task,"2");
+                t2.setPriority(10);
                 t1.start();
                 t2.start();
 
@@ -24,7 +24,5 @@ public class MainThread {
                 e.printStackTrace();
             }
         }
-
-
     }
 }
