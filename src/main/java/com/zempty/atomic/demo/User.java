@@ -15,7 +15,7 @@ public class User {
     public User(){
         System.out.println("user 构造方法被调用");
     }
-    private String name;
+    public  volatile String name;
     private int age;
     private static String id="USER_ID";
 }
