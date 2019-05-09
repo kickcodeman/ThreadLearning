@@ -1,5 +1,5 @@
-<center>java 线程的学习总结 </center>  
-
+java 线程的学习总结
+------
 ### java 关键字 synchronized 的总结：
 
 * synchronized 给线程加锁，锁是有 Object 给的，一个 Object 只有一把锁,多个线程需要共用一把锁的时候就需要添加 synchronized
@@ -23,7 +23,7 @@
 
 * 基本数据类型的数组原子类 AtomicIntegerArray,AtomicLongArray,通过数组索引更改设置元素
 
-* 引用数据类型的原子操作类 AtomicReference ,AtomicRefenceArray 操作引用数组类
+* 引用数据类型的原子操作类 AtomicReference ,AtomicReferenceArray 操作引用数组类
 
 * 多线程操作引用数据类型的字段 ,可以使用  AtomicReferenceFieldUpdater<T,V> : T 代表实际的引用类，V 要操作的字段的数据类型类  
 
@@ -33,8 +33,10 @@
         字段必须是 volatile
 
 * 多线程更新数据的时候，经过一番操作，数据可能会还原，可以添加 stamp ,可以确定数据被操作过：AtomicStampedReference<V> 类进行操作
-类中的泛型 V 代表操作的数据类型，可以是基本数据类型也可以是引用数据类型,该类封装了一个内部类 Pair 其中有两个重要的参数反别是实际操作的数据类型V,
-和一个整形的标记 stamp  
+类中的泛型 V 代表操作的数据类型，可以是基本数据类型也可以是引用数据类型,该类封装了一个内部类 Pair 其中有两个重要的参数反别是实际操作的数据类型V,和一个整形的标记 stamp  
+
+### JUC 包中的锁
+
 
 
 
