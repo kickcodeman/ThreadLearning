@@ -22,7 +22,7 @@ public class RunnableTest implements Runnable{
     public void run() {
         lock.lock();
         try {
-            condition.await();
+            condition.signal();
             System.out.println(Thread.currentThread().getName());
         } catch (Exception e) {
             e.printStackTrace();
