@@ -10,11 +10,11 @@ import java.util.concurrent.locks.ReentrantLock;
  * @create 2019-05-08 5:39 PM
  **/
 public class ReentrantlockTest {
-    private static CountDownLatch countDownLatch;
+
     public static Lock lock;
     public static void main(String[] args) throws InterruptedException {
         lock = new ReentrantLock();
-        countDownLatch = new CountDownLatch(1);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
         RunnableTest runnableTest = new RunnableTest(lock,countDownLatch);
         Thread t1 = new Thread(runnableTest);
         t1.start();
