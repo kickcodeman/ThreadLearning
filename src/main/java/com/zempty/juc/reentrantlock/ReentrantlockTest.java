@@ -1,5 +1,6 @@
 package com.zempty.juc.reentrantlock;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,14 +10,16 @@ import java.util.concurrent.locks.ReentrantLock;
  * @create 2019-05-08 5:39 PM
  **/
 public class ReentrantlockTest {
-
+    private static CountDownLatch countDownLatch;
     public static Lock lock;
     public static void main(String[] args) throws InterruptedException {
         lock = new ReentrantLock();
-        RunnableTest runnableTest = new RunnableTest(lock);
+        countDownLatch = new CountDownLatch(1);
+        RunnableTest runnableTest = new RunnableTest(lock,countDownLatch);
         Thread t1 = new Thread(runnableTest);
         t1.start();
-        Thread.sleep(6000);
+//       阻止主线程先执行，子线程先执行
+        countDownLatch.await();
         lock.lock();
         try {
             runnableTest.getCondition().signal();
