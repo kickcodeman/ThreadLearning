@@ -35,7 +35,7 @@ java 线程的学习总结
 * 多线程更新数据的时候，经过一番操作，数据可能会还原，可以添加 stamp ,可以确定数据被操作过：AtomicStampedReference<V> 类进行操作
 类中的泛型 V 代表操作的数据类型，可以是基本数据类型也可以是引用数据类型,该类封装了一个内部类 Pair 其中有两个重要的参数反别是实际操作的数据类型V,和一个整形的标记 stamp  
 
-### JUC 包中的锁
+### JUC 包中的锁(刚学习难度较大，先会用，然后研究)
 * JUC 包中的几个重要的类关系图，如下图所示:  
 
 ![] (./img/juc.jpg)
@@ -45,6 +45,9 @@ java 线程的学习总结
 * ReenTrantLock 是一个独占锁，有公平锁和非公平锁，常用的方法 lock(),unlock()),默认构造方法是非公平锁
 
 * ReenTrantReadWriteLock 中有两个锁读取锁 ReadLock, 写入锁 WriteLock,读取锁可以允许多线程同时获取锁没有限制，写入锁同一时间只有一个线程获取到锁，其它线程等待
+
+* Condition 类常用方法 await(),用来暂停当前线程，让出 cpu 执行权力给其它线程，其它线程使用 Condition 的 signal()/signalAll(),去恢复暂停的线程执行,condition 的实例通过 Lock 类以及子类可以获取得到
+,该类同 Lock 的子类们一起使用，该类的学习可以类比 Object 的 wait() 和 notify()/notifyAll().
 
 * LockSupport 用来暂停线程的执行，常用方法 park() 和 unpark() ,使用了底层的 UnSafe 类处理线程的暂停和开始。
 
