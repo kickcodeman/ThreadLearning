@@ -11,7 +11,7 @@ public class SemaphoreDemo {
         Semaphore semaphore = new Semaphore(10);
         Thread t1 = new Thread(new Task(semaphore,3));
         Thread t2 = new Thread(new Task(semaphore, 4));
-        Thread t3 = new Thread(new Task(semaphore, 10));
+        Thread t3 = new Thread(new Task(semaphore, 6));
         t1.start();
         t2.start();
         t3.start();

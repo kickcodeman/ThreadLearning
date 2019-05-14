@@ -13,7 +13,7 @@ public class CyclicBarrierDemo {
                 System.out.println("线程执行完毕！会执行该代码！")
                 );
         System.out.println(Thread.currentThread().getName()+"开始执行！");
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             new Thread(()->{
                 System.out.println(Thread.currentThread().getName()+"开始执行！");
                 try {
