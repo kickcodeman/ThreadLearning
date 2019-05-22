@@ -1,5 +1,6 @@
 package com.zempty.juc.reentrantlock;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
@@ -10,9 +11,11 @@ import java.util.concurrent.locks.Lock;
 public class RunnableTest implements Runnable{
     private Lock lock;
     private Condition condition;
-    public RunnableTest(Lock lock) {
+    private CountDownLatch countDownLatch;
+    public RunnableTest(Lock lock,CountDownLatch countDownLatch) {
         this.lock = lock;
-        condition = lock.newCondition();
+        this.condition = lock.newCondition();
+        this.countDownLatch = countDownLatch;
     }
 
     public Condition getCondition() {
@@ -22,8 +25,10 @@ public class RunnableTest implements Runnable{
     public void run() {
         lock.lock();
         try {
-            condition.signal();
-            System.out.println(Thread.currentThread().getName());
+            System.out.println(Thread.currentThread().getName()+"开始拿到锁执行！");
+            countDownLatch.countDown();
+            condition.await();
+            System.out.println(Thread.currentThread().getName()+"被主线程唤醒！");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
