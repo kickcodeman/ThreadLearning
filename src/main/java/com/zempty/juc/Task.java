@@ -16,10 +16,9 @@ public class Task implements Runnable {
     }
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().getName()+"开始进来了！");
         try {
             semaphore.acquire(holder);
-            System.out.println(Thread.currentThread().getName()+"正在执行！");
+            System.out.println(Thread.currentThread().getName()+"进来了！");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally {

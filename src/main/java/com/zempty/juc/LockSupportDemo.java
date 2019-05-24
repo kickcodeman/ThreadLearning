@@ -18,6 +18,7 @@ public class LockSupportDemo {
             System.out.println(Thread.currentThread().getName()+"开始执行！");
             LockSupport.unpark(mainThread);
         }).start();
+
         LockSupport.park();
         System.out.println(Thread.currentThread().getName()+"恢复执行！");
     }
