@@ -164,13 +164,15 @@ Callable 参与进来（带有返回值的 Runnable ），这个接口是真正�
     * Executors.newCachedThreadPool() ,队列是 SynChronousQueue 的类型，拒绝策略是 AbortPolicy ，线程池不会对线程池的大小做限制。
    
 * Callable 和 Future 类的一个分析，继承图如下所示：
-![](./img/ft.jpg)
+
+
+        ![](./img/ft.jpg)
 
 * Callable 是一个任务接口，定义了一个 call() 方法，具有返回值。
 
 * Future 是一个接口，可以获取通过 get() 获取结果。
 
-* RunnableFuture 是一个接口，继承了上面的两个接口。
+* RunnableFuture 是一个接口，继承了上面的 Future 和 Runnable 。
 
 * 上面各个接口的子类 FutureTask ,定义了以上接口中的具体方法实现，该类在 run() 方法具体调用了 Callable 中的 run 方法。
 
