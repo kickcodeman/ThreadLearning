@@ -101,8 +101,83 @@ ReentrantLock 类型的锁，针对取出和插入有取出锁 takeLock 和插�
 * ConcurrentLinkedQueue 线程安全的单向队列，继承了 AbstractQueue ,内部是用单向链表的形式实现的，尾部插入数据，头部取出数据。
 ![](./img/clq.jpg)  
 
+### JUC 线程池的剖析
 
+* 线程池的架构图如下：
+![](./img/xcc.jpg)
 
+* Executor 接口中只有一个 execute(Runnable command) 方法用来执行任务，个人理解这不应该算是真正意义的线程池
+
+* ExecutorService 接口继承 Executor 接口，这个接口定义了一些处理任务的方法，submit(),shutdown(),invokeAll 等等方法，在这个接口中带有返回值的任务
+Callable 参与进来（带有返回值的 Runnable ），这个接口是真正意义上的线程池父接口。
+
+* AbstractExecutorService 是一个抽象类实现了 ExecutorService 接口，该类实现了接口中的大部分方法，节省了子类的重写方法的开销。
+
+* ScheduledExecutorService 是一个接口，继承了 ExecutorService 接口，在原有的接口上又拓展了线程池接口的功能，该接口让线程池具备了
+在指定时间间隔执行任务的功能。
+
+* ThreadPoolExecutor 是一个真正意义的线程池，该类继承 AbstractExecutorService , 分析如下：
+    * 该类具有多个构造方法，都最终调用了 public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize, long keepAliveTime, TimeUnit unit,BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory,RejectedExecutionHandler handler) 
+    这个构造方法。现对构造方法中的参数分析如下：
+    
+    * corePoolSize 这个是表示核心线程的数目。默认情况下，当有任务来临的时候就会创建新的线程去执行任务，直到达到 corePoolSize
+    
+    * workQueue 这个是用来容纳任务的一个队列，当任务较多的时候，任务数量已经大于 corePoolSize（核心线程忙不过来了） ,就会把任务添加到 workQueue 当中（相当于一个任务仓库，
+    线程相当于工人，忙不过来了，现在仓库积压），关于队列有三个典型的子类队列详述如下：
+        * LinkedBlockQueue 是一个链表形式的无界队列，没有限制容器的容量，可以无限制的积压过来的任务。
+        
+        * ArrayBlockQueue 是一个数组形式的有界队列，如果队列满了（容器没有容量了，仓库积压已满），就会创建新的线程，直到线程数目达到 maximunPoolSize,就不会在创建线程，执行拒绝策略（调用 handler 中的方法）
+        
+        * SynChronousQueue 该队列不好理解，可参考链接理解 [SynchronousQueue 的理解](https://blog.csdn.net/whu_zhangmin/article/details/45112231)
+        该队列通常需要 maximumPoolSize 足够的大。
+        
+    * maximumPoolSize 是能够创建的最大的线程数目，当超过这个数目，将会执行拒绝策略，交给 handler 处理。
+    
+    * keepAliveTime 默认当线程池中的线程数目大于 corePoolSize 的时候，该参数才会有意义，表示的是没有任务执行的时候线程可以存活的时间，直到线程数目
+    小于等于 corePoolSize ,keepAliveTime 失效。
+    
+    * unit , 表示的是时间单位。
+    
+    * ThreadFactory ,表示的是线程工厂，用来生产线程。
+    
+    * handler 当线程数目达到最大值的时候，还有任务会有相应的拒绝策略，拒绝策略（RejectedExecutionHandler 的子类）详述如下：
+    
+        * AbortPolicy 当任务添加到线程池中被拒绝的时候，将抛出 RejectedExecutionException 异常。
+        
+        * CallerRunsPolicy 当任务添加到线程池中被拒绝的时候，会在当前正在运行的 Thread 中处理被拒绝的任务。
+        
+        * DiscardPolicy 当任务添加到线程池中被拒绝的时候，线程池将丢弃被拒绝的任务。
+        
+        * DiscardOldestPolicy 当任务添加到线程池被拒绝的时候，线程池会移除等待队列中最旧的未处理的任务，然后将被拒绝的任务添加到等待队列中。
+        
+        * 以上关于拒绝策略的描述可以参照 demo 理解，链接如下 [ 拒绝策略的 demo ](https://www.cnblogs.com/skywang12345/p/3512947.html)
+        
+* ScheduledThreadPoolExecutor 继承 ThreadPoolExecutor , 因此拥有线程池的一切功能，有实现了 ScheduledExecutorService 接口
+具有定时执行任务的功能。
+
+* 一个线程池的功能类 Executors , 下面主要列举利用该类创建线程池的三种方法：
+
+    * Executors.newFixedThreadPool(int Threads),线程数目固定，队列是 LinkedBlockingQueue 的类型，拒绝策略是 AbortPolicy 。
+    
+    * Executors.newSingleThreadExecutor(),仅仅创建一个线程，队列是 LinkedBlockingQueue 的类型，拒绝策略是 AbortPolicy 。
+    
+    * Executors.newCachedThreadPool() ,队列是 SynChronousQueue 的类型，拒绝策略是 AbortPolicy ，线程池不会对线程池的大小做限制。
+   
+* Callable 和 Future 类的一个分析，继承图如下所示：
+![](./img/ft.jpg)
+
+* Callable 是一个任务接口，定义了一个 call() 方法，具有返回值。
+
+* Future 是一个接口，可以获取通过 get() 获取结果。
+
+* RunnableFuture 是一个接口，继承了上面的两个接口。
+
+* 上面各个接口的子类 FutureTask ,定义了以上接口中的具体方法实现，该类在 run() 方法具体调用了 Callable 中的 run 方法。
+
+    
+                                                      
+    
+    
 
 
 
