@@ -11,7 +11,7 @@ java 线程的学习总结
 * 线程中 interrupt() 的方法的使用，当一个线程在循环的执行一个任务，往往需要一个中断的机制，当线程处于阻塞状态的时候线程
 调用这个方法会有异常抛出，通常于 isInterrupted(),搭配使用，这个通常用在 while 循环当中作为标志位（true/false）,去跳出循坏条件！
 
-* 线程的 join() 的原理是让当前线程的父线程释放持有当前线程对象的锁，父线程陷入阻塞状态，该线程正常运行！
+* 线程的 join() 的原理是让当前线程的父线程持有当前线程对象的锁，父线程陷入阻塞状态，该线程正常运行！
 
 * 线程的优先级是 1-10，优先级高的线程优先执行，线程分为用户线程和守护线程，用户线程执行完的时候，守护线程会自动关闭。
 
@@ -39,7 +39,7 @@ java 线程的学习总结
 
 * JUC 包中的几个重要的类关系图，如下图所示:  
 
-![] (./img/juc.jpg)
+![](./img/juc.jpg)
 
 * 一个重要的类 AbstractQueuedSynchronizer 该类简称 AQS 是 JUC 包中一个非常重要的类，理解 JUC 必须阅读该类的源码，熟悉运作机制
 
@@ -68,7 +68,7 @@ await(),在线程数达到 parties 之前该方法会一直阻塞当前线程，
 
 
 * CopyOnWriteArraySet 是通过 CopyOnWriteArrayList 实现的，元素不可重复，有序，添加元素是通过 CopyOnWriteArrayList 中的 addIfAbsent(Object e) 方法去实现的。
-![](./img/cwal.jpg)  
+![](./img/cwas.jpg)  
 
 
 * ConcurrentHashMap 继承了 AbstractMap, 实现了ConcurrentMap 的接口，线程安全的 HashMap ,通用 Unsafe（原子性操作）和 Synchronized (加锁操作实现线程安全)
@@ -140,7 +140,7 @@ Callable 参与进来（带有返回值的 Runnable ），这个接口是真正�
     
     * ThreadFactory ,表示的是线程工厂，用来生产线程。
     
-    * handler 当线程数目达到最大值的时候，还有任务会有相应的拒绝策略，拒绝策略（RejectedExecutionHandler 的子类）详述如下：
+    * handler 当线程数目达到最大值的时候，还有任务进来，就会有相应的拒绝策略，拒绝策略（RejectedExecutionHandler 的子类）详述如下：
     
         * AbortPolicy 当任务添加到线程池中被拒绝的时候，将抛出 RejectedExecutionException 异常。
         
@@ -161,9 +161,10 @@ Callable 参与进来（带有返回值的 Runnable ），这个接口是真正�
     
     * Executors.newSingleThreadExecutor(),仅仅创建一个线程，队列是 LinkedBlockingQueue 的类型，拒绝策略是 AbortPolicy 。
     
-    * Executors.newCachedThreadPool() ,队列是 SynChronousQueue 的类型，拒绝策略是 AbortPolicy ，线程池不会对线程池的大小做限制。
+    * Executors.newCachedThreadPool() ,队列是 SynChronousQueue 的类型，拒绝策略是 AbortPolicy ，线程池不会对线程池的大小做限制。  
+  
    
-* Callable 和 Future 类的一个分析，继承图如下所式 ：  ![](./img/ft.jpg)
+* Callable 和 Future 类的一个分析，关于 Future 继承图如下所式 ：  ![](./img/ft.jpg)
 
 * Callable 是一个任务接口，定义了一个 call() 方法，具有返回值。
 
