@@ -174,8 +174,6 @@ Callable 参与进来（带有返回值的 Runnable ），这个接口是真正�
 
 * 上面各个接口的子类 FutureTask ,定义了以上接口中的具体方法实现，该类在 run() 方法具体调用了 Callable 中的 run 方法。
 
-### pull request 的测试
-
     
                                                       
     
